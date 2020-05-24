@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
-    private List<Product> products = new ArrayList<Product>();
+    private List<Product> products = new ArrayList<>();
     private int id;
 
     public Order(int id) {
@@ -28,13 +28,14 @@ public class Order {
     }
 
     public void getOrderContent(StringBuilder sb) {
-        new OrderWriter().getOrderContent(sb);
+        sb.append(new OrderWriter().getContent());
     }
 
 
-    private class OrderWriter {
+    private class OrderWriter implements StringWriter {
 
-        public void getOrderContent(StringBuilder sb) {
+        public String getContent() {
+            StringBuilder sb = new StringBuilder();
             getOrderContentPrelude(sb);
 
             for (int j = 0; j < getProductsCount(); j++) {
@@ -42,6 +43,7 @@ public class Order {
             }
 
             getOrderContentPostlude(sb);
+            return sb.toString();
         }
 
         private void getOrderContentPostlude(StringBuilder sb) {
@@ -49,16 +51,13 @@ public class Order {
                 sb.delete(sb.length() - 2, sb.length());
             }
 
-            sb.append("]");
-            sb.append("}, ");
+            sb.append("]}, ");
         }
 
         private void getOrderContentPrelude(StringBuilder sb) {
-            sb.append("{");
-            sb.append("\"id\": ");
+            sb.append("{\"id\": ");
             sb.append(getOrderId());
-            sb.append(", ");
-            sb.append("\"products\": [");
+            sb.append(", \"products\": [");
         }
     }
 }

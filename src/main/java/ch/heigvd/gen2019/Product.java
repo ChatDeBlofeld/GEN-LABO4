@@ -30,13 +30,14 @@ public class Product {
     }
 
     public void getProductContent(StringBuilder sb){
-        new ProductWriter().getProductContent(sb);
+
+        sb.append(new ProductWriter().getContent());
     }
 
-    private class ProductWriter{
-        public void getProductContent(StringBuilder sb) {
-
-            sb.append("{");
+    private class ProductWriter implements StringWriter {
+        public String getContent() {
+            StringBuilder sb = new StringBuilder();
+            getProductPrelude(sb);
 
             getProperty(sb, "code", getCode(), true);
             getProperty(sb, "color", color.toString(), true);
@@ -49,9 +50,17 @@ public class Product {
             getProperty(sb, "price", Double.toString(getPrice()), false);
             getProperty(sb, "currency", getCurrency(), true);
 
+            getProductPostlude(sb);
+            return sb.toString();
+        }
 
+        private void getProductPostlude(StringBuilder sb) {
             sb.delete(sb.length() - 3, sb.length());
             sb.append("\"}, ");
+        }
+
+        private void getProductPrelude(StringBuilder sb) {
+            sb.append("{");
         }
 
         private void getProperty(StringBuilder sb, String propertyName, String propertyValue, boolean surroundValueWithQuotes){
